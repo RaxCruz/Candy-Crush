@@ -7,6 +7,9 @@
   --explodeColor: rgba(0, 255, 255, 0.21);
   --explodeColor2: rgba(255, 105, 180, 0.666);
 }
+.grabbing {
+  cursor: grabbing;
+}
 body {
   background: rgba(243, 103, 103, 0.836);
   background-repeat: no-repeat;

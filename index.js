@@ -31,7 +31,7 @@ startGame = () => {
       candy.addEventListener("dragover", dragOver); //移動時候
       candy.addEventListener("dragenter", dragEnter); //放到別的地方時候
       candy.addEventListener("dragleave", dragLeave); //離開時候
-      //candy.addEventListener("drop", dragDrop)// 降落
+      candy.addEventListener("drop", dragDrop); // 降落
       candy.addEventListener("dragend", dragEnd); //移動結束 交換
       candyBoard.append(candy, particle);
       particle.style.top = `${r * candy.getBoundingClientRect().width}px`;
@@ -44,20 +44,30 @@ startGame = () => {
   }
   //crushCandy()
 };
-
+var img = new Image();
+img.src =
+  "data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=";
 dragStart = (e) => {
-  e.dataTransfer.effectAllowed = "all";
+  e.dataTransfer.setDragImage(img, 0, 0);
+
   currCandy = e.target;
+  e.dataTransfer.effectAllowed;
 };
-dragEnter = (e) => {};
+dragEnter = (e) => {
+  e.preventDefault();
+};
 dragOver = (e) => {
   e.preventDefault();
-  e.dataTransfer.dropEffect = "none";
+
+  e.dataTransfer.dropEffect = "move";
 };
-dragLeave = (e) => {
+dragLeave = (e) => {};
+dragDrop = (e) => {
   otherCandy = e.target;
 };
 dragEnd = (e) => {
+  currCandy.classList.remove("none");
+  console.log(currCandy, otherCandy);
   const currColIndex = Math.round(
     currCandy.style.left.split("px")[0] /
       currCandy.getBoundingClientRect().width
