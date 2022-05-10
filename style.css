@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 :root {
-  --explodeColor: rgba(0, 255, 255, 0.548);
+  --explodeColor: rgba(0, 255, 255, 0.21);
   --explodeColor2: rgba(255, 105, 180, 0.666);
 }
 body {
@@ -50,14 +50,29 @@ body {
   }
   80% {
     opacity: 0;
-    transform: scale(2);
+    transform: scale(4);
+  }
+}
+@keyframes disappear {
+  0% {
+    transform: scale(1);
+  }
+  30% {
+    opacity: 0.4;
+  }
+  80% {
+    opacity: 0;
+    transform: scale(0);
   }
 }
 .particle {
   position: absolute;
   width: 11.11%;
   height: 11.11%;
-  background: transparent;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  animation: disappear 1s;
 }
 .particle::after {
   position: absolute;
@@ -70,7 +85,17 @@ body {
   border-radius: 100%;
   animation: explode 1s;
 }
-
+.particle::before {
+  position: absolute;
+  content: "";
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.452);
+  border-radius: 100%;
+  animation: explode 1s;
+}
 .none {
   display: none;
 }

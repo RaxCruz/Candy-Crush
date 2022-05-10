@@ -221,8 +221,10 @@ candyScale = () => {
   for (let r = 0; r < rows; r += 1) {
     for (let c = 0; c < columns; c += 1) {
       if (board[r][c].classList.contains("boom")) {
+        const oldImage = board[r][c].src;
         board[r][c].style.transition = "all 0s ease-in-out";
         board[r][c].style.opacity = 0;
+        particles[r * 9 + c].style.backgroundImage = `url(${oldImage})`;
         particles[r * 9 + c].classList.remove("none");
         // document.documentElement.style.setProperty(
         //   "--explodeColor",
