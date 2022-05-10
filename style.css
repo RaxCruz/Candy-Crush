@@ -3,7 +3,10 @@
   padding: 0;
   box-sizing: border-box;
 }
-
+:root {
+  --explodeColor: rgba(0, 255, 255, 0.548);
+  --explodeColor2: rgba(255, 105, 180, 0.666);
+}
 body {
   background: rgba(243, 103, 103, 0.836);
   background-repeat: no-repeat;
@@ -28,22 +31,46 @@ body {
   background: rgba(255, 255, 255, 0.452);
   border: 5px solid slategray;
   border-radius: 10px;
+  overflow: hidden;
 }
-
 
 #board img {
   position: absolute;
   width: 11.11%;
   height: 11.11%;
+  z-index: 2;
 }
 
+.boom {
+}
 
-/* .boom {
-  background: rgba(255, 255, 0, 0.685);
-  transform: scale(1.2);
-  box-shadow: 0 0 10px rgba(255, 187, 0, 0.699),
-    0 0 40px rgba(255, 187, 0, 0.699), 0 0 80px rgba(255, 187, 0, 0.699),
-    0 0 120px rgba(255, 187, 0, 0.699);
-  transition-delay: 1s;
-  transition-duration: 12ms;
-} */
+@keyframes explode {
+  0% {
+    transform: scale(1);
+  }
+  80% {
+    opacity: 0;
+    transform: scale(2);
+  }
+}
+.particle {
+  position: absolute;
+  width: 11.11%;
+  height: 11.11%;
+  background: transparent;
+}
+.particle::after {
+  position: absolute;
+  content: "";
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--explodeColor);
+  border-radius: 100%;
+  animation: explode 1s;
+}
+
+.none {
+  display: none;
+}
