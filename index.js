@@ -1,4 +1,4 @@
-const candies = ["Blue", "Orange", "Green", "Yellow"];
+const candies = ["Blue", "Orange", "Green", "Yellow", "Red", "Purple"];
 const board = [];
 const [rows, columns] = [9, 9];
 let score = 0;
