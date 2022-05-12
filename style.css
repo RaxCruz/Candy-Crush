@@ -3,13 +3,16 @@
   padding: 0;
   box-sizing: border-box;
 }
+
 :root {
   --explodeColor: rgba(0, 255, 255, 0.21);
   --explodeColor2: rgba(255, 105, 180, 0.666);
 }
+
 .grabbing {
   cursor: grabbing;
 }
+
 body {
   background: rgba(243, 103, 103, 0.836);
   background-repeat: no-repeat;
@@ -44,30 +47,34 @@ body {
   z-index: 2;
 }
 
-.boom {
-}
+.boom {}
 
 @keyframes explode {
   0% {
     transform: scale(1);
   }
+
   80% {
     opacity: 0;
     transform: scale(4);
   }
 }
+
 @keyframes disappear {
   0% {
     transform: scale(1);
   }
+
   30% {
     opacity: 0.4;
   }
+
   80% {
     opacity: 0;
     transform: scale(0);
   }
 }
+
 .particle {
   position: absolute;
   width: 11.11%;
@@ -77,6 +84,7 @@ body {
   background-size: contain;
   animation: disappear 1s;
 }
+
 .particle::after {
   position: absolute;
   content: "";
@@ -88,6 +96,7 @@ body {
   border-radius: 100%;
   animation: explode 1s;
 }
+
 .particle::before {
   position: absolute;
   content: "";
@@ -99,6 +108,7 @@ body {
   border-radius: 100%;
   animation: explode 1s;
 }
+
 .none {
   display: none;
 }

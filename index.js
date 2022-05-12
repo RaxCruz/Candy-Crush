@@ -20,24 +20,21 @@ startGame = () => {
   for (let r = 0; r < rows; r += 1) {
     let row = [];
     for (let c = 0; c < columns; c += 1) {
-      // <img id="0-0" src="./image/Red.png">
       const candy = document.createElement("img");
       candy.src = "./images/" + randomCandy() + ".png";
       const particle = document.createElement("div");
       particle.classList.add("particle", "none");
       candy.src = "./images/" + randomCandy() + ".png";
-      candy.draggable = true;
-      candy.addEventListener("dragstart", dragStart); //剛點擊時候
-      candy.addEventListener("dragover", dragOver); //移動時候
-      candy.addEventListener("dragenter", dragEnter); //放到別的地方時候
-      candy.addEventListener("dragleave", dragLeave); //離開時候
-      candy.addEventListener("drop", dragDrop); // 降落
-      candy.addEventListener("dragend", dragEnd); //移動結束 交換
-      //touch event
+      //mouse event
       candy.addEventListener("touchstart", touchStart);
       candy.addEventListener("touchend", touchEnd);
       candy.addEventListener("touchcancel", touchCancel);
       candy.addEventListener("touchmove", touchMove);
+      //touch event
+      candy.addEventListener("mousedown", touchStart);
+      candy.addEventListener("mouseup", touchEnd);
+      candy.addEventListener("mouseenter", mouseEnter);
+      candy.addEventListener("mousemove", touchMove);
       candyBoard.append(candy, particle);
       particle.style.top = `${r * candy.getBoundingClientRect().width}px`;
       particle.style.left = `${c * candy.getBoundingClientRect().width}px`;
@@ -47,7 +44,6 @@ startGame = () => {
     }
     board.push(row);
   }
-  //crushCandy()
 };
 let startx, starty;
 //獲得角度
@@ -62,7 +58,7 @@ function getDirection(startx, starty, endx, endy) {
   var result = 0;
 
   //如果滑動距離太短
-  if (Math.abs(angx) < 2 && Math.abs(angy) < 2) {
+  if (Math.abs(angx) < 30 && Math.abs(angy) < 30) {
     return result;
   }
 
@@ -79,29 +75,52 @@ function getDirection(startx, starty, endx, endy) {
 
   return result;
 }
+getPageCoor = (e) => {
+  let x
+  let y
+  if (e.touches) {
+    x = e.touches[0].pageX
+    y = e.touches[0].pageY
+  }
+  else if (e.changedTouches) {
+    x = e.changedTouches[0].pageX
+    y = e.changedTouches[0].pageY
+  }
+  else {
+    x = e.pageX
+    y = e.pageY
+  }
+  return [x, y]
+}
 //touch event handler
+let isStart = false
 touchStart = (e) => {
-  e.preventDefault();
+
+
+  //e.preventDefault();
   currCandy = e.target;
-  startx = e.touches[0].pageX;
-  starty = e.touches[0].pageY;
+  [startx, starty] = getPageCoor(e)
+
+  isStart = true
+  e.preventDefault()
+}
+mouseEnter = (e) => {
+
 }
 touchMove = (e) => {
-  e.preventDefault();
-}
-touchEnd = (e) => {
-  e.preventDefault();
+  //e.preventDefault();
   var endx, endy;
-  endx = e.changedTouches[0].pageX;
-  endy = e.changedTouches[0].pageY;
+  [endx, endy] = getPageCoor(e)
   var direction = getDirection(startx, starty, endx, endy);
+  if (direction === 0 || isStart === false) return;
+  isStart = false
   let currRow, currCol, otherRow = -1, otherCol = -1, temp
   let targetLeft = 0
   let targetTop = 0
   switch (direction) {
     case 0:
-      alert("未滑動！");
       break;
+    //上方
     case 1:
       targetLeft = currCandy.getBoundingClientRect().left
       targetTop = currCandy.getBoundingClientRect().top - currCandy.getBoundingClientRect().width
@@ -148,6 +167,7 @@ touchEnd = (e) => {
         }, 1000);
       }
       break;
+    //下方
     case 2:
       targetLeft = currCandy.getBoundingClientRect().left
       targetTop = currCandy.getBoundingClientRect().top + currCandy.getBoundingClientRect().width
@@ -196,6 +216,7 @@ touchEnd = (e) => {
         }, 1000);
       }
       break;
+    //左方
     case 3:
       targetLeft = currCandy.getBoundingClientRect().left - currCandy.getBoundingClientRect().width
       targetTop = currCandy.getBoundingClientRect().top
@@ -245,6 +266,7 @@ touchEnd = (e) => {
         }, 1000);
       }
       break;
+    //右方
     case 4:
       targetLeft = currCandy.getBoundingClientRect().left + currCandy.getBoundingClientRect().width
       targetTop = currCandy.getBoundingClientRect().top
@@ -294,11 +316,18 @@ touchEnd = (e) => {
     default:
   }
 }
+touchEnd = (e) => {
+
+  //e.preventDefault();
+}
 touchCancel = (e) => {
   e.preventDefault();
-
 }
 
+//mouse
+
+
+//drag
 var img = new Image();
 img.src =
   "data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=";
@@ -491,10 +520,6 @@ candyScale = () => {
         board[r][c].style.opacity = 0;
         particles[r * 9 + c].style.backgroundImage = `url(${oldImage})`;
         particles[r * 9 + c].classList.remove("none");
-        // document.documentElement.style.setProperty(
-        //   "--explodeColor",
-        //   board[r][c].src.split("/").pop().split(".")[0].toLowerCase()
-        // );
 
         setTimeout(() => {
           particles[r * 9 + c].classList.add("none");
