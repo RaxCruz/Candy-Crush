@@ -33,6 +33,11 @@ startGame = () => {
       candy.addEventListener("dragleave", dragLeave); //離開時候
       candy.addEventListener("drop", dragDrop); // 降落
       candy.addEventListener("dragend", dragEnd); //移動結束 交換
+      //touch event
+      candy.addEventListener("touchstart", touchStart);
+      candy.addEventListener("touchend", touchEnd);
+      candy.addEventListener("touchcancel", touchCancel);
+      candy.addEventListener("touchmove", touchMove);
       candyBoard.append(candy, particle);
       particle.style.top = `${r * candy.getBoundingClientRect().width}px`;
       particle.style.left = `${c * candy.getBoundingClientRect().width}px`;
@@ -44,6 +49,240 @@ startGame = () => {
   }
   //crushCandy()
 };
+let startx, starty;
+//獲得角度
+function getAngle(angx, angy) {
+  return Math.atan2(angy, angx) * 180 / Math.PI;
+};
+
+//根據起點終點返回方向 1向上 2向下 3向左 4向右 0未滑動
+function getDirection(startx, starty, endx, endy) {
+  var angx = endx - startx;
+  var angy = endy - starty;
+  var result = 0;
+
+  //如果滑動距離太短
+  if (Math.abs(angx) < 2 && Math.abs(angy) < 2) {
+    return result;
+  }
+
+  var angle = getAngle(angx, angy);
+  if (angle >= -135 && angle <= -45) {
+    result = 1;
+  } else if (angle > 45 && angle < 135) {
+    result = 2;
+  } else if ((angle >= 135 && angle <= 180) || (angle >= -180 && angle < -135)) {
+    result = 3;
+  } else if (angle >= -45 && angle <= 45) {
+    result = 4;
+  }
+
+  return result;
+}
+//touch event handler
+touchStart = (e) => {
+  e.preventDefault();
+  currCandy = e.target;
+  startx = e.touches[0].pageX;
+  starty = e.touches[0].pageY;
+}
+touchMove = (e) => {
+  e.preventDefault();
+}
+touchEnd = (e) => {
+  e.preventDefault();
+  var endx, endy;
+  endx = e.changedTouches[0].pageX;
+  endy = e.changedTouches[0].pageY;
+  var direction = getDirection(startx, starty, endx, endy);
+  let targetLeft = currCandy.getBoundingClientRect().left - currCandy.getBoundingClientRect().width
+  let targetTop = currCandy.getBoundingClientRect().top
+  let currRow, currCol, otherRow, otherCol, temp
+  switch (direction) {
+    case 0:
+      alert("未滑動！");
+      break;
+    case 1:
+      alert("向上！")
+      for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+          if (board[r][c].getBoundingClientRect().left === currCandy.getBoundingClientRect().left && board[r][c].getBoundingClientRect().top === currCandy.getBoundingClientRect().top) {
+            console.log(r, c)
+            currRow = r; currCol = c
+          }
+          if (board[r][c].getBoundingClientRect().left === targetLeft && board[r][c].getBoundingClientRect().top === targetTop) {
+            otherCandy = board[r][c]
+            console.log(r, c)
+            otherRow = r; otherCol = c;
+          }
+        }
+      }
+      currCandy.style.transition = "all 1s ease-in-out";
+      otherCandy.style.transition = "all 1s ease-in-out";
+      temp = otherCandy.style.top;
+      otherCandy.style.top = currCandy.style.top;
+      currCandy.style.top = temp;
+      temp = board[currRow][currCol]
+      board[currRow][currCol] = board[otherRow][otherCol]
+      board[otherRow][otherCol] = temp
+
+      if (crushCandy()) {
+        setTimeout(() => {
+          candyScale();
+        }, 800);
+      } else {
+        setTimeout(() => {
+
+          currCandy.style.transition = "all 1s ease-in-out";
+          otherCandy.style.transition = "all 1s ease-in-out";
+          temp = otherCandy.style.top;
+          otherCandy.style.top = currCandy.style.top;
+          currCandy.style.top = temp;
+
+          temp = board[currRow][currCol]
+          board[currRow][currCol] = board[otherRow][otherCol]
+          board[otherRow][otherCol] = temp
+        }, 1000);
+      }
+      break;
+    case 2:
+      alert("向下！")
+      for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+          if (board[r][c].getBoundingClientRect().left === currCandy.getBoundingClientRect().left && board[r][c].getBoundingClientRect().top === currCandy.getBoundingClientRect().top) {
+            console.log(r, c)
+            currRow = r; currCol = c
+          }
+          if (board[r][c].getBoundingClientRect().left === targetLeft && board[r][c].getBoundingClientRect().top === targetTop) {
+            otherCandy = board[r][c]
+            console.log(r, c)
+            otherRow = r; otherCol = c;
+          }
+        }
+      }
+      currCandy.style.transition = "all 1s ease-in-out";
+      otherCandy.style.transition = "all 1s ease-in-out";
+      temp = otherCandy.style.top;
+      otherCandy.style.top = currCandy.style.top;
+      currCandy.style.top = temp;
+      temp = board[currRow][currCol]
+      board[currRow][currCol] = board[otherRow][otherCol]
+      board[otherRow][otherCol] = temp
+
+      if (crushCandy()) {
+        setTimeout(() => {
+          candyScale();
+        }, 800);
+      } else {
+        setTimeout(() => {
+
+          currCandy.style.transition = "all 1s ease-in-out";
+          otherCandy.style.transition = "all 1s ease-in-out";
+          temp = otherCandy.style.top;
+          otherCandy.style.top = currCandy.style.top;
+          currCandy.style.top = temp;
+
+          temp = board[currRow][currCol]
+          board[currRow][currCol] = board[otherRow][otherCol]
+          board[otherRow][otherCol] = temp
+        }, 1000);
+      }
+      break;
+    case 3:
+
+      for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+          if (board[r][c].getBoundingClientRect().left === currCandy.getBoundingClientRect().left && board[r][c].getBoundingClientRect().top === currCandy.getBoundingClientRect().top) {
+            console.log(r, c)
+            currRow = r; currCol = c
+          }
+          if (board[r][c].getBoundingClientRect().left === targetLeft && board[r][c].getBoundingClientRect().top === targetTop) {
+            otherCandy = board[r][c]
+            console.log(r, c)
+            otherRow = r; otherCol = c;
+          }
+        }
+      }
+      currCandy.style.transition = "all 1s ease-in-out";
+      otherCandy.style.transition = "all 1s ease-in-out";
+      temp = otherCandy.style.left;
+      otherCandy.style.left = currCandy.style.left;
+      currCandy.style.left = temp;
+
+      temp = board[currRow][currCol]
+      board[currRow][currCol] = board[otherRow][otherCol]
+      board[otherRow][otherCol] = temp
+
+      if (crushCandy()) {
+        setTimeout(() => {
+          candyScale();
+        }, 800);
+      } else {
+        setTimeout(() => {
+
+          currCandy.style.transition = "all 1s ease-in-out";
+          otherCandy.style.transition = "all 1s ease-in-out";
+          temp = otherCandy.style.left;
+          otherCandy.style.left = currCandy.style.left;
+          currCandy.style.left = temp;
+
+          temp = board[currRow][currCol]
+          board[currRow][currCol] = board[otherRow][otherCol]
+          board[otherRow][otherCol] = temp
+        }, 1000);
+      }
+      break;
+    case 4:
+      alert("向右！")
+      for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+          if (board[r][c].getBoundingClientRect().left === currCandy.getBoundingClientRect().left && board[r][c].getBoundingClientRect().top === currCandy.getBoundingClientRect().top) {
+            console.log(r, c)
+            currRow = r; currCol = c
+          }
+          if (board[r][c].getBoundingClientRect().left === targetLeft && board[r][c].getBoundingClientRect().top === targetTop) {
+            otherCandy = board[r][c]
+            console.log(r, c)
+            otherRow = r; otherCol = c;
+          }
+        }
+      }
+      currCandy.style.transition = "all 1s ease-in-out";
+      otherCandy.style.transition = "all 1s ease-in-out";
+      temp = otherCandy.style.left;
+      otherCandy.style.left = currCandy.style.left;
+      currCandy.style.left = temp;
+      temp = board[currRow][currCol]
+      board[currRow][currCol] = board[otherRow][otherCol]
+      board[otherRow][otherCol] = temp
+
+      if (crushCandy()) {
+        setTimeout(() => {
+          candyScale();
+        }, 800);
+      } else {
+        setTimeout(() => {
+
+          currCandy.style.transition = "all 1s ease-in-out";
+          otherCandy.style.transition = "all 1s ease-in-out";
+          temp = otherCandy.style.left;
+          otherCandy.style.left = currCandy.style.left;
+          currCandy.style.left = temp;
+
+          temp = board[currRow][currCol]
+          board[currRow][currCol] = board[otherRow][otherCol]
+          board[otherRow][otherCol] = temp
+        }, 1000);
+      }
+      break;
+    default:
+  }
+}
+touchCancel = (e) => {
+  e.preventDefault();
+  console.log(e.target, 'touchCancel')
+}
+
 var img = new Image();
 img.src =
   "data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=";
@@ -61,7 +300,7 @@ dragOver = (e) => {
 
   e.dataTransfer.dropEffect = "move";
 };
-dragLeave = (e) => {};
+dragLeave = (e) => { };
 dragDrop = (e) => {
   otherCandy = e.target;
 };
@@ -70,18 +309,18 @@ dragEnd = (e) => {
   console.log(currCandy, otherCandy);
   const currColIndex = Math.round(
     currCandy.style.left.split("px")[0] /
-      currCandy.getBoundingClientRect().width
+    currCandy.getBoundingClientRect().width
   );
   const currRowIndex = Math.round(
     currCandy.style.top.split("px")[0] / currCandy.getBoundingClientRect().width
   );
   const otherColIndex = Math.round(
     otherCandy.style.left.split("px")[0] /
-      otherCandy.getBoundingClientRect().width
+    otherCandy.getBoundingClientRect().width
   );
   const otherRowIndex = Math.round(
     otherCandy.style.top.split("px")[0] /
-      otherCandy.getBoundingClientRect().width
+    otherCandy.getBoundingClientRect().width
   );
   const [currRow, currCol] = [currRowIndex, currColIndex];
   const [otherRow, otherCol] = [otherRowIndex, otherColIndex];
@@ -274,9 +513,8 @@ candySlide = () => {
     let baseIndex = 1;
     for (let r = rows - 1; r >= 0; r -= 1) {
       if (board[r][c].classList.contains("empty")) {
-        board[r][c].style.top = `${
-          -board[r][c].getBoundingClientRect().width * baseIndex
-        }px`;
+        board[r][c].style.top = `${-board[r][c].getBoundingClientRect().width * baseIndex
+          }px`;
         baseIndex += 1;
       }
     }
@@ -305,7 +543,7 @@ candySlide = () => {
     for (let r = rows - 1; r >= 0; r -= 1) {
       const boardCol = Math.round(
         board[r][c].style.top.split("px")[0] /
-          board[r][c].getBoundingClientRect().width
+        board[r][c].getBoundingClientRect().width
       );
       for (let i = lowJection[c].length - 1; i >= 0; i -= 1) {
         if (boardCol < lowJection[c][i] && baseIndex !== i) {
@@ -350,7 +588,7 @@ candySlide = () => {
           const newTop =
             Math.round(
               board[r][c].style.top.split("px")[0] /
-                board[r][c].getBoundingClientRect().width
+              board[r][c].getBoundingClientRect().width
             ) + dropDis[c][8 - r];
           const newIndex = board[r][c].getBoundingClientRect().width * newTop;
           //console.log(Number(board[r][c].style.top.split('px')[0]) + board[r][c].getBoundingClientRect().width, (board[r][c].style.top.split('px')[0]) + board[r][c].getBoundingClientRect().width)
