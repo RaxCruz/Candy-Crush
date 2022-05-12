@@ -95,28 +95,31 @@ touchEnd = (e) => {
   endx = e.changedTouches[0].pageX;
   endy = e.changedTouches[0].pageY;
   var direction = getDirection(startx, starty, endx, endy);
-  let targetLeft = currCandy.getBoundingClientRect().left - currCandy.getBoundingClientRect().width
-  let targetTop = currCandy.getBoundingClientRect().top
-  let currRow, currCol, otherRow, otherCol, temp
+  let currRow, currCol, otherRow = -1, otherCol = -1, temp
+  let targetLeft = 0
+  let targetTop = 0
   switch (direction) {
     case 0:
       alert("未滑動！");
       break;
     case 1:
-      alert("向上！")
+      targetLeft = currCandy.getBoundingClientRect().left
+      targetTop = currCandy.getBoundingClientRect().top - currCandy.getBoundingClientRect().width
+
       for (let r = 0; r < 9; r++) {
         for (let c = 0; c < 9; c++) {
           if (board[r][c].getBoundingClientRect().left === currCandy.getBoundingClientRect().left && board[r][c].getBoundingClientRect().top === currCandy.getBoundingClientRect().top) {
-            console.log(r, c)
+
             currRow = r; currCol = c
           }
-          if (board[r][c].getBoundingClientRect().left === targetLeft && board[r][c].getBoundingClientRect().top === targetTop) {
+          if (board[r][c].getBoundingClientRect().left >= targetLeft - 0.05 && board[r][c].getBoundingClientRect().left <= targetLeft + 0.05 && board[r][c].getBoundingClientRect().top >= targetTop - 0.05 && board[r][c].getBoundingClientRect().top <= targetTop + 0.05) {
             otherCandy = board[r][c]
-            console.log(r, c)
+
             otherRow = r; otherCol = c;
           }
         }
       }
+      if (otherRow === -1 && otherCol === -1) break
       currCandy.style.transition = "all 1s ease-in-out";
       otherCandy.style.transition = "all 1s ease-in-out";
       temp = otherCandy.style.top;
@@ -146,20 +149,25 @@ touchEnd = (e) => {
       }
       break;
     case 2:
-      alert("向下！")
+      targetLeft = currCandy.getBoundingClientRect().left
+      targetTop = currCandy.getBoundingClientRect().top + currCandy.getBoundingClientRect().width
+
       for (let r = 0; r < 9; r++) {
         for (let c = 0; c < 9; c++) {
           if (board[r][c].getBoundingClientRect().left === currCandy.getBoundingClientRect().left && board[r][c].getBoundingClientRect().top === currCandy.getBoundingClientRect().top) {
-            console.log(r, c)
+
             currRow = r; currCol = c
           }
-          if (board[r][c].getBoundingClientRect().left === targetLeft && board[r][c].getBoundingClientRect().top === targetTop) {
+          if (board[r][c].getBoundingClientRect().left >= targetLeft - 0.05 && board[r][c].getBoundingClientRect().left <= targetLeft + 0.05 && board[r][c].getBoundingClientRect().top >= targetTop - 0.05 && board[r][c].getBoundingClientRect().top <= targetTop + 0.05) {
             otherCandy = board[r][c]
-            console.log(r, c)
+
+
             otherRow = r; otherCol = c;
           }
         }
       }
+
+      if (otherRow === -1 && otherCol === -1) break
       currCandy.style.transition = "all 1s ease-in-out";
       otherCandy.style.transition = "all 1s ease-in-out";
       temp = otherCandy.style.top;
@@ -189,29 +197,34 @@ touchEnd = (e) => {
       }
       break;
     case 3:
+      targetLeft = currCandy.getBoundingClientRect().left - currCandy.getBoundingClientRect().width
+      targetTop = currCandy.getBoundingClientRect().top
 
       for (let r = 0; r < 9; r++) {
         for (let c = 0; c < 9; c++) {
           if (board[r][c].getBoundingClientRect().left === currCandy.getBoundingClientRect().left && board[r][c].getBoundingClientRect().top === currCandy.getBoundingClientRect().top) {
-            console.log(r, c)
+
             currRow = r; currCol = c
           }
-          if (board[r][c].getBoundingClientRect().left === targetLeft && board[r][c].getBoundingClientRect().top === targetTop) {
+          if (board[r][c].getBoundingClientRect().left >= targetLeft - 0.05 && board[r][c].getBoundingClientRect().left <= targetLeft + 0.05 && board[r][c].getBoundingClientRect().top >= targetTop - 0.05 && board[r][c].getBoundingClientRect().top <= targetTop + 0.05) {
+
             otherCandy = board[r][c]
-            console.log(r, c)
             otherRow = r; otherCol = c;
+
           }
         }
       }
+
+      if (otherRow === -1 && otherCol === -1) break
       currCandy.style.transition = "all 1s ease-in-out";
       otherCandy.style.transition = "all 1s ease-in-out";
       temp = otherCandy.style.left;
       otherCandy.style.left = currCandy.style.left;
       currCandy.style.left = temp;
-
       temp = board[currRow][currCol]
       board[currRow][currCol] = board[otherRow][otherCol]
       board[otherRow][otherCol] = temp
+
 
       if (crushCandy()) {
         setTimeout(() => {
@@ -219,7 +232,6 @@ touchEnd = (e) => {
         }, 800);
       } else {
         setTimeout(() => {
-
           currCandy.style.transition = "all 1s ease-in-out";
           otherCandy.style.transition = "all 1s ease-in-out";
           temp = otherCandy.style.left;
@@ -229,24 +241,28 @@ touchEnd = (e) => {
           temp = board[currRow][currCol]
           board[currRow][currCol] = board[otherRow][otherCol]
           board[otherRow][otherCol] = temp
+
         }, 1000);
       }
       break;
     case 4:
-      alert("向右！")
+      targetLeft = currCandy.getBoundingClientRect().left + currCandy.getBoundingClientRect().width
+      targetTop = currCandy.getBoundingClientRect().top
       for (let r = 0; r < 9; r++) {
         for (let c = 0; c < 9; c++) {
           if (board[r][c].getBoundingClientRect().left === currCandy.getBoundingClientRect().left && board[r][c].getBoundingClientRect().top === currCandy.getBoundingClientRect().top) {
-            console.log(r, c)
+
             currRow = r; currCol = c
           }
-          if (board[r][c].getBoundingClientRect().left === targetLeft && board[r][c].getBoundingClientRect().top === targetTop) {
+          if (board[r][c].getBoundingClientRect().left >= targetLeft - 0.05 && board[r][c].getBoundingClientRect().left <= targetLeft + 0.05 && board[r][c].getBoundingClientRect().top >= targetTop - 0.05 && board[r][c].getBoundingClientRect().top <= targetTop + 0.05) {
             otherCandy = board[r][c]
-            console.log(r, c)
+
+
             otherRow = r; otherCol = c;
           }
         }
       }
+      if (otherRow === -1 && otherCol === -1) break
       currCandy.style.transition = "all 1s ease-in-out";
       otherCandy.style.transition = "all 1s ease-in-out";
       temp = otherCandy.style.left;
@@ -280,7 +296,7 @@ touchEnd = (e) => {
 }
 touchCancel = (e) => {
   e.preventDefault();
-  console.log(e.target, 'touchCancel')
+
 }
 
 var img = new Image();
@@ -306,7 +322,7 @@ dragDrop = (e) => {
 };
 dragEnd = (e) => {
   currCandy.classList.remove("none");
-  console.log(currCandy, otherCandy);
+
   const currColIndex = Math.round(
     currCandy.style.left.split("px")[0] /
     currCandy.getBoundingClientRect().width
@@ -578,7 +594,7 @@ candySlide = () => {
             board[r][c].classList.remove("empty");
           }
           board[r][c].style.transition = "all 1s ease-in-out";
-          // console.log(
+          // 
           //   Math.round(
           //     board[r][c].style.top.split("px")[0] /
           //       board[r][c].getBoundingClientRect().width
@@ -591,7 +607,7 @@ candySlide = () => {
               board[r][c].getBoundingClientRect().width
             ) + dropDis[c][8 - r];
           const newIndex = board[r][c].getBoundingClientRect().width * newTop;
-          //console.log(Number(board[r][c].style.top.split('px')[0]) + board[r][c].getBoundingClientRect().width, (board[r][c].style.top.split('px')[0]) + board[r][c].getBoundingClientRect().width)
+          //
           board[r][c].style.top = `${newIndex}px`;
         }
       }
@@ -609,4 +625,4 @@ candySlide = () => {
 //     }
 //   }
 // }
-// console.log(dropDis)
+// 
